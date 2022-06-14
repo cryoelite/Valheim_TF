@@ -15,7 +15,7 @@ module "vcn" {
 
   # Optional Inputs
   vcn_name = "Valheim_TF_VCN"
-  vcn_dns_label = "Vahelim_TF_DNS"
+  vcn_dns_label = "valhillify"
   vcn_cidrs = ["10.0.0.0/16"]
   
   create_internet_gateway = true
