@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  valheim-ansiblu:
+    image: valheim-ansiblu
+    build:
+      context: ../
+      dockerfile: "Dockerfile"
+      args:
+        - ROOT_PS
+        - Linode_API
+    ports:
+      - "8007:80"
+      - "8008:443"
+    env_file:
+      - .env
+
