@@ -1,5 +1,5 @@
 #!/bin/sh
-docker-compose build --build-arg ROOT_PS=<pass> --build-arg Linode_API=<apikey> --no-cache
+docker-compose build --build-arg ROOT_PS=<pass> --build-arg Linode_API=<apikey> --build-arg SERVER_PS=<serverps> --no-cache
 #remove no-cache to use cache for faster build time
 #docker run --name ansiblu_c -u root -ti --entrypoint /bin/sh valheim-ansiblu
 #This keeps the container running but doesnt execute the dockerfile's entrypoint.

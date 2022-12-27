@@ -9,6 +9,7 @@ services:
       args:
         - ROOT_PS
         - Linode_API
+        - SERVER_PS
     ports:
       - "8007:80"
       - "8008:443"

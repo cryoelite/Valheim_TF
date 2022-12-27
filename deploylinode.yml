@@ -1,5 +1,7 @@
 - name: Create Valheim-LN
   hosts: localhost
+  environment:
+    SERVER_PASSWORD: "{{ SERVER_PS }}"
   vars_files:
       - ./group_vars/vars.yml
   tasks:
@@ -12,22 +14,26 @@
         image: linode/ubuntu22.10
         root_pass: "{{ password }}"
         state: present
+
     - name: Install aptitude
       apt:
         name: aptitude
         state: latest
         update_cache: true
+
     - name: Update and Upgrade
       become: true
       apt:
         update_cache: yes
         upgrade: yes
+
     - name: Install nano
       become: true
       apt:
         pkg: nano
         state: present
         update_cache: true
+
     - name: Install required system packages
       apt:
         pkg:
@@ -59,5 +65,37 @@
     - name: Install Docker Module for Python
       pip:
         name: docker
+
+    - name: Add adminstrator to docker group
+      user:
+        name: "dev"
+        groups: docker
+        append: yes
+
+    - name: Install Docker Compose
+      get_url:
+        url: "https://github.com/docker/compose/releases/download/v2.14.2/docker-compose-linux-x86_64"
+        dest: /usr/local/bin/docker-compose
+        mode: u+x,g+x,o+x
+
+    - name: Install Git
+      apt: 
+        name: git
+        state: latest
+        update_cache: true
+    
+    - name: Clone repo
+      become: true
+      ansible.builtin.git:
+        repo: https://github.com/cryoelite/Valheim_TF.git
+        dest: /home/
+        clone: yes
+        update: yes
+
+    - name: Start Valheim
+      ansible.builtin.shell: 
+        chdir: /home/Valheim_TF/Valheim/
+        cmd: docker-compose up
+
 
     

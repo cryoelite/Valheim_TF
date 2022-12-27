@@ -31,6 +31,7 @@ RUN chmod 777 ~/development/setup.sh
 
 ARG ROOT_PS
 ARG Linode_API
+ARG SERVER_PS
 
 #RUN ansible-vault encrypt_string "${ROOT_PS}" --name 'password' --vault-password-file /root/development/.vault-pass | tee -a ~/development/group_vars/vars.yml
 #RUN echo "" >> /root/development/group_vars/vars.yml
@@ -44,9 +45,9 @@ RUN touch ~/development/result.txt
 #Can't use RUN, they run the commands on image build time, we wish to run these on container built time.
 
 #RUN cat /root/development/result.txt
-
-ENV ROOT_PS=${ROOT_PS}
-ENV Linode_API=${Linode_API}
+ENV ROOT_PS ${ROOT_PS}
+ENV Linode_API ${Linode_API}
+ENV SERVER_PS ${SERVER_PS}
 
 
 ENTRYPOINT ["/root/development/valheim-ansible-conf.sh"]
