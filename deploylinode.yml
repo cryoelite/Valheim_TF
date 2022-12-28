@@ -60,8 +60,7 @@
 
     - name: Wait for linode instance to be running
       wait_for:
-        timeout: 600
+        port: 22
+        host: '{{ linode_instance.instance.ipv4 | first }}'
+        search_regex: OpenSSH
         delay: 10
-        delegate_to: localhost
-        until:
-          - linode_instance.instance.status == "running"
