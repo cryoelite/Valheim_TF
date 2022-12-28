@@ -110,18 +110,7 @@
       ansible.builtin.shell: 
         cmd: export SERVER_PASSWORD="{{ SERVER_PS }}"
 
-    - name: Setup files
+    - name: Start server
       ansible.builtin.shell: 
         cmd: docker-compose -f /home/ValheimGH/Valheim/docker-compose.yml up -d
 
-    - name: Waiting 30sec for files to build
-      ansible.builtin.pause:
-        seconds: 30
-
-    - name: compose down
-      ansible.builtin.shell: 
-        cmd: docker-compose -f /home/ValheimGH/Valheim/docker-compose.yml down
-
-    - name: Start Server
-      ansible.builtin.shell: 
-        cmd: docker-compose -f /home/ValheimGH/Valheim/docker-compose.yml up -d
