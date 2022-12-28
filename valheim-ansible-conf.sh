@@ -8,6 +8,15 @@ echo "" >> /root/development/group_vars/vars.yml
 echo "SERVER_PS: $SERVER_PS" >> /root/development/group_vars/vars.yml
 echo "" >> /root/development/group_vars/vars.yml
 
-ansible-playbook ~/development/deploylinode.yml --vault-password-file /root/development/.vault-pass > ~/development/result.txt
+echo "remote_pass = $ROOT_PS" >> /etc/ansible/ansible.cfg
+echo "" >> /etc/ansible/ansible.cfg
+
+ansible-playbook -i /root/development/custom_inventory.ini ~/development/deploylinode.yml  --vault-password-file /root/development/.vault-pass> ~/development/result.txt
+
+sleep 90
+
+#echo 'yes' | ansible-playbook -i /root/development/custom_inventory.ini -c /root/development/ansible.cfg ~/development/linodeconf.yml --vault-password-file /root/development/.vault-pass -vvv > ~/development/result.txt
+#using default config file location
+ansible-playbook -i /root/development/custom_inventory.ini ~/development/linodeconf.yml --vault-password-file /root/development/.vault-pass > ~/development/result.txt
 
 cat /root/development/result.txt

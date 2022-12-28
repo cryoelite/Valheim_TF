@@ -1,9 +1,7 @@
 - name: Create Valheim-LN
   hosts: localhost
-  environment:
-    SERVER_PASSWORD: "{{ SERVER_PS }}"
   vars_files:
-      - ./group_vars/vars.yml
+    - ./group_vars/vars.yml
   tasks:
     - name: Valheim-LN
       linode.cloud.instance:
@@ -14,88 +12,56 @@
         image: linode/ubuntu22.10
         root_pass: "{{ password }}"
         state: present
+      register: linode_instance
 
-    - name: Install aptitude
-      apt:
-        name: aptitude
-        state: latest
-        update_cache: true
+    - name: Add linode instance to hosts
+      add_host:
+        hostname: "{{ linode_instance.instance.ipv4 | first }}"
+        groupname: linode_instances
 
-    - name: Update and Upgrade
-      become: true
-      apt:
-        update_cache: yes
-        upgrade: yes
-
-    - name: Install nano
-      become: true
-      apt:
-        pkg: nano
-        state: present
-        update_cache: true
-
-    - name: Install required system packages
-      apt:
-        pkg:
-          - apt-transport-https
-          - ca-certificates
-          - curl
-          - software-properties-common
-          - python3-pip
-          - virtualenv
-          - python3-setuptools
-        state: latest
-        update_cache: true
-    - name: Add Docker GPG apt Key
-      apt_key:
-        url: https://download.docker.com/linux/ubuntu/gpg
+    - name: Update inventory file with instance ip
+      community.general.ini_file:
+        allow_no_value: true
+        no_extra_spaces: true
+        path: /root/development/custom_inventory.ini
+        section: linode_instances
+        option: "{{ linode_instance.instance.ipv4 | first }}"
         state: present
 
-    - name: Add Docker Repository
-      apt_repository:
-        repo: deb https://download.docker.com/linux/ubuntu focal stable
+    - name: Update inventory file with ansible collection
+      community.general.ini_file:
+        allow_no_value: true
+        no_extra_spaces: true
+        path: /root/development/custom_inventory.ini
+        section: all:vars
+        option: "ansible_connection"
+        value: "ssh"
         state: present
 
-    - name: Update apt and install docker-ce
-      apt:
-        name: docker-ce
-        state: latest
-        update_cache: true
+    - name: Update inventory file with ssh user
+      community.general.ini_file:
+        allow_no_value: true
+        no_extra_spaces: true
+        path: /root/development/custom_inventory.ini
+        section: all:vars
+        option: "ansible_user"
+        value: "root"
+        state: present
 
-    - name: Install Docker Module for Python
-      pip:
-        name: docker
+    - name: Update inventory file with ssh password
+      community.general.ini_file:
+        allow_no_value: true
+        no_extra_spaces: true
+        path: /root/development/custom_inventory.ini
+        section: all:vars
+        option: "ansible_ssh_pass"
+        value: "{{ password }}"
+        state: present
 
-    - name: Add adminstrator to docker group
-      user:
-        name: "dev"
-        groups: docker
-        append: yes
-
-    - name: Install Docker Compose
-      get_url:
-        url: "https://github.com/docker/compose/releases/download/v2.14.2/docker-compose-linux-x86_64"
-        dest: /usr/local/bin/docker-compose
-        mode: u+x,g+x,o+x
-
-    - name: Install Git
-      apt: 
-        name: git
-        state: latest
-        update_cache: true
-    
-    - name: Clone repo
-      become: true
-      ansible.builtin.git:
-        repo: https://github.com/cryoelite/Valheim_TF.git
-        dest: /home/
-        clone: yes
-        update: yes
-
-    - name: Start Valheim
-      ansible.builtin.shell: 
-        chdir: /home/Valheim_TF/Valheim/
-        cmd: docker-compose up
-
-
-    
+    - name: Wait for linode instance to be running
+      wait_for:
+        timeout: 600
+        delay: 10
+        delegate_to: localhost
+        until:
+          - linode_instance.instance.status == "running"

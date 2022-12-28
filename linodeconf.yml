@@ -1,0 +1,110 @@
+- name: Setup Linode Instance
+  hosts: linode_instances
+  become: true
+  vars_files:
+      - ./group_vars/vars.yml
+  
+  tasks:
+    - name: Update and Upgrade
+      become: true
+      apt:
+        update_cache: yes
+        upgrade: yes
+    
+    - name: Set ENV VARS
+      become: true
+      set_fact:
+        os_environment:
+          - key: SERVER_PASSWORD
+            value: "{{ SERVER_PS }}"
+
+    - name: Set /etc/environment env vars 
+      ansible.builtin.lineinfile:
+        dest: "/etc/environment"
+        state: present
+        regexp: "^{{ item.key }}="
+        line: "{{ item.key }}={{ item.value }}"
+      with_items: "{{ os_environment }}"
+
+    - name: Create Directory
+      become: true
+      file:
+        path: /home/ValheimGH/
+        state: directory
+        mode: '0755'
+        recurse: yes
+
+    - name: Install aptitude
+      apt:
+        name: aptitude
+        state: latest
+        update_cache: true
+
+    - name: Install nano
+      become: true
+      apt:
+        pkg: nano
+        state: present
+        update_cache: true
+
+    - name: Install required system packages
+      apt:
+        pkg:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - python3-pip
+          - virtualenv
+          - python3-setuptools
+        state: latest
+        update_cache: true
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu focal stable
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt:
+        name: docker-ce
+        state: latest
+        update_cache: true
+
+    - name: Install Docker Module for Python
+      pip:
+        name: docker
+
+    - name: Add adminstrator to docker group
+      user:
+        name: "dev"
+        groups: docker
+        append: yes
+
+    - name: Install Docker Compose
+      get_url:
+        url: "https://github.com/docker/compose/releases/download/v2.14.2/docker-compose-linux-x86_64"
+        dest: /usr/local/bin/docker-compose
+        mode: u+x,g+x,o+x
+
+    - name: Install Git
+      apt: 
+        name: git
+        state: latest
+        update_cache: true
+    
+    - name: Clone repo
+      become: true
+      ansible.builtin.git:
+        repo: https://github.com/cryoelite/Valheim_TF.git
+        dest: /home/ValheimGH/
+        clone: yes
+        update: yes
+
+    - name: Start Valheim
+      ansible.builtin.shell: 
+        cmd: docker-compose -f /home/ValheimGH/Valheim/docker-compose.yml up --build-arg SERVER_PASSWORD=$SERVER_PASSWORD
