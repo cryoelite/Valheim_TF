@@ -104,6 +104,7 @@
         dest: /home/ValheimGH/
         clone: yes
         update: yes
+        force: true
 
     - name: Export temp env var
       ansible.builtin.shell: 
