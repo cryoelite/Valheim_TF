@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker-compose up
+docker-compose -f /home/ValheimGH/Valheim/docker-compose.yml up -d

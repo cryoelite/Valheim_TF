@@ -110,7 +110,32 @@
       ansible.builtin.shell: 
         cmd: export SERVER_PASSWORD="{{ SERVER_PS }}"
 
-    - name: Start server
+    - name: Copy valheim service
+      become: true
+      ansible.builtin.copy: 
+        src: /home/ValheimGH/Valheim/valheim.service
+        dest: /etc/systemd/system/valheim.service
+        group: root
+        owner: root
+        mode: '0644'
+
+    - name: Daemon Reload
+      become: true
       ansible.builtin.shell: 
-        cmd: docker-compose -f /home/ValheimGH/Valheim/docker-compose.yml up -d
+        cmd: systemctl daemon-reload  
+
+    - name: Enable valheim service
+      become: true
+      ansible.builtin.shell: 
+        cmd: systemctl enable valheim.service 
+
+    - name: Start valheim service
+      become: true
+      ansible.builtin.shell: 
+        cmd: systemctl start valheim
+
+    - name: Reboot
+      become: true
+      ansible.builtin.reboot: 
+        test_command: echo "Booted!"
 
