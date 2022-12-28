@@ -111,4 +111,4 @@
 
     - name: Setup compose
       ansible.builtin.shell: 
-        cmd: docker-compose -f /home/ValheimGH/Valheim/docker-compose.yml up
+        cmd: docker-compose -f /home/ValheimGH/Valheim/docker-compose.yml up -d
