@@ -39,6 +39,7 @@ RUN chmod 644 ~/development/linodeconf.yml
 ARG ROOT_PS
 ARG Linode_API
 ARG SERVER_PS
+ARG POSTWEBHOOK
 
 #RUN ansible-vault encrypt_string "${ROOT_PS}" --name 'password' --vault-password-file /root/development/.vault-pass | tee -a ~/development/group_vars/vars.yml
 #RUN echo "" >> /root/development/group_vars/vars.yml
@@ -57,6 +58,7 @@ RUN chmod 777 ~/development/custom_inventory.ini
 ENV ROOT_PS ${ROOT_PS}
 ENV Linode_API ${Linode_API}
 ENV SERVER_PS ${SERVER_PS}
+ENV POSTWEBHOOK ${POSTWEBHOOK}
 
 
 ENTRYPOINT ["/root/development/valheim-ansible-conf.sh"]

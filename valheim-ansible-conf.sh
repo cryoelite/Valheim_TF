@@ -8,6 +8,9 @@ echo "" >> /root/development/group_vars/vars.yml
 echo "SERVER_PS: $SERVER_PS" >> /root/development/group_vars/vars.yml
 echo "" >> /root/development/group_vars/vars.yml
 
+echo "POSTWEBHOOK: $POSTWBHOOK" >> /root/development/group_vars/vars.yml
+echo "" >> /root/development/group_vars/vars.yml
+
 echo "remote_pass = $ROOT_PS" >> /etc/ansible/ansible.cfg
 echo "" >> /etc/ansible/ansible.cfg
 

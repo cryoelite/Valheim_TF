@@ -17,6 +17,8 @@
         os_environment:
           - key: SERVER_PASSWORD
             value: "{{ SERVER_PS }}"
+          - key: POSTWEBHOOK
+            value: "{{ POSTWEBHOOK }}"
 
     - name: Set /etc/environment env vars 
       ansible.builtin.lineinfile:
@@ -106,18 +108,33 @@
         update: yes
         force: true
 
-    - name: Export temp env var
+    - name: Export temp server pass env var
       ansible.builtin.shell: 
         cmd: export SERVER_PASSWORD="{{ SERVER_PS }}"
+
+    - name: Export temp postwebhook env var
+      ansible.builtin.shell: 
+        cmd: export POSTWEBHOOK="{{ POSTWEBHOOK }}"
 
     - name: Copy valheim service
       become: true
       ansible.builtin.copy: 
         src: /home/ValheimGH/Valheim/valheim.service
         dest: /etc/systemd/system/valheim.service
+        remote_src: true
         group: root
         owner: root
         mode: '0644'
+
+    - name: Change start_Valheim file perms
+      become: true
+      file: 
+        path: /home/ValheimGH/Valheim/start_Valheim.sh
+        remote_src: true
+        group: root
+        owner: root
+        mode: '0755'
+        state: file
 
     - name: Daemon Reload
       become: true
