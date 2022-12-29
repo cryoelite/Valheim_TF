@@ -130,7 +130,6 @@
       become: true
       file: 
         path: /home/ValheimGH/Valheim/start_Valheim.sh
-        remote_src: true
         group: root
         owner: root
         mode: '0755'
