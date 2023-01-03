@@ -6,11 +6,6 @@ services:
     build:
       context: ../
       dockerfile: "Dockerfile"
-      args:
-        - ROOT_PS
-        - Linode_API
-        - SERVER_PS
-        - POSTWEBHOOK
     ports:
       - "8007:80"
       - "8008:443"

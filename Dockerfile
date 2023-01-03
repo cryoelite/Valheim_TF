@@ -29,36 +29,17 @@ COPY ["../deploylinode.yml", "/root/development/"]
 COPY ["../valheim-ansible-conf.sh", "/root/development/"]
 COPY ["../setup.sh", "/root/development/"]
 COPY ["../linodeconf.yml", "/root/development/"]
+COPY ["../Valheim/.env", "/root/development/"]
 RUN chmod 644 ~/development/.vault-pass
 RUN chmod 777 /etc/ansible//ansible.cfg
 RUN chmod 644 ~/development/deploylinode.yml
 RUN chmod 777 ~/development/valheim-ansible-conf.sh
 RUN chmod 777 ~/development/setup.sh
 RUN chmod 644 ~/development/linodeconf.yml
+RUN chmod 644 ~/development/.env
 
-ARG ROOT_PS
-ARG Linode_API
-ARG SERVER_PS
-ARG POSTWEBHOOK
-
-#RUN ansible-vault encrypt_string "${ROOT_PS}" --name 'password' --vault-password-file /root/development/.vault-pass | tee -a ~/development/group_vars/vars.yml
-#RUN echo "" >> /root/development/group_vars/vars.yml
-
-#RUN ansible-vault encrypt_string "${Linode_API}" --name 'api_token' --vault-password-file /root/development/.vault-pass | tee -a ~/development/group_vars/vars.yml
-#RUN echo "" >> /root/development/group_vars/vars.yml
-
-#RUN touch ~/development/result.txt
 RUN touch ~/development/custom_inventory.ini
 RUN chmod 777 ~/development/custom_inventory.ini
-#RUN ansible-playbook ~/development/deploylinode.yml --vault-password-file /root/development/.vault-pass > ~/development/result.txt
-
-#Can't use RUN, they run the commands on image build time, we wish to run these on container built time.
-
-#RUN cat /root/development/result.txt
-ENV ROOT_PS ${ROOT_PS}
-ENV Linode_API ${Linode_API}
-ENV SERVER_PS ${SERVER_PS}
-ENV POSTWEBHOOK ${POSTWEBHOOK}
 
 
 ENTRYPOINT ["/root/development/valheim-ansible-conf.sh"]

@@ -10,23 +10,6 @@
       apt:
         update_cache: yes
         upgrade: yes
-    
-    - name: Set ENV VARS
-      become: true
-      set_fact:
-        os_environment:
-          - key: SERVER_PASSWORD
-            value: "{{ SERVER_PS }}"
-          - key: POSTWEBHOOK
-            value: "{{ POSTWEBHOOK }}"
-
-    - name: Set /etc/environment env vars 
-      ansible.builtin.lineinfile:
-        dest: "/etc/environment"
-        state: present
-        regexp: "^{{ item.key }}="
-        line: "{{ item.key }}={{ item.value }}"
-      with_items: "{{ os_environment }}"
 
     - name: Create Directory
       become: true
@@ -61,6 +44,7 @@
           - python3-setuptools
         state: latest
         update_cache: true
+
     - name: Add Docker GPG apt Key
       apt_key:
         url: https://download.docker.com/linux/ubuntu/gpg
@@ -108,13 +92,14 @@
         update: yes
         force: true
 
-    - name: Export temp server pass env var
-      ansible.builtin.shell: 
-        cmd: export SERVER_PASSWORD="{{ SERVER_PS }}"
-
-    - name: Export temp postwebhook env var
-      ansible.builtin.shell: 
-        cmd: export POSTWEBHOOK="{{ POSTWEBHOOK }}"
+    - name: Copy server env file from build system to host
+      become: true
+      ansible.builtin.copy: 
+        src: /root/development/.env
+        dest: /home/ValheimGH/Valheim/.env
+        group: root
+        owner: root
+        mode: '0644'
 
     - name: Copy valheim service
       become: true

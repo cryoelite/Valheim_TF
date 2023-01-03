@@ -5,12 +5,6 @@ echo "" >> /root/development/group_vars/vars.yml
 ansible-vault encrypt_string $Linode_API --name 'api_token' --vault-password-file /root/development/.vault-pass | tee -a ~/development/group_vars/vars.yml
 echo "" >> /root/development/group_vars/vars.yml
 
-echo "SERVER_PS: $SERVER_PS" >> /root/development/group_vars/vars.yml
-echo "" >> /root/development/group_vars/vars.yml
-
-echo "POSTWEBHOOK: $POSTWEBHOOK" >> /root/development/group_vars/vars.yml
-echo "" >> /root/development/group_vars/vars.yml
-
 echo "remote_pass = $ROOT_PS" >> /etc/ansible/ansible.cfg
 echo "" >> /etc/ansible/ansible.cfg
 
