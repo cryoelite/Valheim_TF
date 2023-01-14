@@ -27,14 +27,12 @@ COPY ["../.vault-pass", "/root/development/"]
 COPY ["../ansible.cfg", "/etc/ansible/"]
 COPY ["../deploylinode.yml", "/root/development/"]
 COPY ["../valheim-ansible-conf.sh", "/root/development/"]
-COPY ["../setup.sh", "/root/development/"]
 COPY ["../linodeconf.yml", "/root/development/"]
 COPY ["../Valheim/.env", "/root/development/"]
 RUN chmod 644 ~/development/.vault-pass
 RUN chmod 777 /etc/ansible//ansible.cfg
 RUN chmod 644 ~/development/deploylinode.yml
 RUN chmod 777 ~/development/valheim-ansible-conf.sh
-RUN chmod 777 ~/development/setup.sh
 RUN chmod 644 ~/development/linodeconf.yml
 RUN chmod 644 ~/development/.env
 
