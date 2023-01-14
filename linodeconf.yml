@@ -92,6 +92,63 @@
         update: yes
         force: true
 
+    - name: Make valheim config directory
+      become: true
+      file: 
+        path: /home/ValheimGH/Valheim/config/
+        group: root
+        owner: root
+        mode: '0755'
+        state: directory
+
+    - name: Make valheim data directory
+      become: true
+      file: 
+        path: /home/ValheimGH/Valheim/data/
+        group: root
+        owner: root
+        mode: '0755'
+        state: directory
+
+    - name: Make download directory
+      become: true
+      file: 
+        path: /home/ValheimGH/download/
+        group: root
+        owner: root
+        mode: '0755'
+        state: directory
+      when: BKP_LOC is defined and BKP_LOC|length > 0
+
+    - name: Download backup dedicated world
+      become: true
+      get_url:
+       url: "{{ BKP_LOC }}"
+       dest: /home/ValheimGH/download/backup.zip
+       group: root
+       owner: root
+       mode: 0755
+      when: BKP_LOC is defined and BKP_LOC|length > 0
+
+    - name: Unzip Backup world
+      become: true
+      ansible.builtin.unarchive:
+        src: /home/ValheimGH/download/backup.zip
+        dest: /home/ValheimGH/download/
+        remote_src: yes
+      when: BKP_LOC is defined and BKP_LOC|length > 0     
+
+    - name: Copy Backup world
+      become: true
+      ansible.builtin.copy: 
+        src: /home/ValheimGH/download/config/
+        dest: /home/ValheimGH/Valheim/config/
+        remote_src: true
+        group: root
+        owner: root
+        mode: '0755'
+      when: BKP_LOC is defined and BKP_LOC|length > 0 
+
     - name: Copy server env file from build system to host
       become: true
       ansible.builtin.copy: 
