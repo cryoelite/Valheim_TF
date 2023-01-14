@@ -82,7 +82,26 @@
         name: git
         state: latest
         update_cache: true
-    
+
+    - name: Install unzip
+      apt: 
+        name: unzip
+        state: latest
+        update_cache: true
+
+    - name: Install zip and transitively zipinfo
+      apt: 
+        name: zip
+        state: latest
+        update_cache: true
+
+    - name: Install zstd
+      apt: 
+        name: zstd
+        state: latest
+        update_cache: true        
+
+
     - name: Clone repo
       become: true
       ansible.builtin.git:
@@ -120,6 +139,11 @@
         state: directory
       when: BKP_LOC is defined and BKP_LOC|length > 0
 
+    - name: Debug printing BKP_LOC value
+      debug:
+        msg: "Backup URL is: {{ BKP_LOC }}"
+
+
     - name: Download backup dedicated world
       become: true
       get_url:
@@ -129,14 +153,13 @@
        owner: root
        mode: 0755
       when: BKP_LOC is defined and BKP_LOC|length > 0
+      ignore_errors: True
 
     - name: Unzip Backup world
       become: true
-      ansible.builtin.unarchive:
-        src: /home/ValheimGH/download/backup.zip
-        dest: /home/ValheimGH/download/
-        remote_src: yes
-      when: BKP_LOC is defined and BKP_LOC|length > 0     
+      command: unzip /home/ValheimGH/download/backup.zip -d /home/ValheimGH/download/
+      when: BKP_LOC is defined and BKP_LOC|length > 0  
+      ignore_errors: True   
 
     - name: Copy Backup world
       become: true
@@ -147,7 +170,8 @@
         group: root
         owner: root
         mode: '0755'
-      when: BKP_LOC is defined and BKP_LOC|length > 0 
+      when: BKP_LOC is defined and BKP_LOC|length > 0
+      ignore_errors: True 
 
     - name: Copy server env file from build system to host
       become: true

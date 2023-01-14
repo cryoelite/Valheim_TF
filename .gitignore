@@ -131,3 +131,5 @@ changelogs/.plugin-cache.yaml
 .env
 temp.json
 temp.txt
+Valheim/config/
+Valheim/data/
