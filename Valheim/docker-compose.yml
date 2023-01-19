@@ -8,6 +8,7 @@ services:
     volumes: 
       - ./config:/config
       - ./data:/opt/valheim
+      - ./backup.sh:/home/backup.sh
     ports: 
       - "2456-2457:2456-2457/udp"
       - "9001:9001/tcp"

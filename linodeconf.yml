@@ -42,6 +42,11 @@
           - python3-pip
           - virtualenv
           - python3-setuptools
+          - jq
+          - git
+          - unzip
+          - zstd
+          - zip
         state: latest
         update_cache: true
 
@@ -76,31 +81,6 @@
         url: "https://github.com/docker/compose/releases/download/v2.14.2/docker-compose-linux-x86_64"
         dest: /usr/local/bin/docker-compose
         mode: u+x,g+x,o+x
-
-    - name: Install Git
-      apt: 
-        name: git
-        state: latest
-        update_cache: true
-
-    - name: Install unzip
-      apt: 
-        name: unzip
-        state: latest
-        update_cache: true
-
-    - name: Install zip and transitively zipinfo
-      apt: 
-        name: zip
-        state: latest
-        update_cache: true
-
-    - name: Install zstd
-      apt: 
-        name: zstd
-        state: latest
-        update_cache: true        
-
 
     - name: Clone repo
       become: true
