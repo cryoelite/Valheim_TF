@@ -112,7 +112,8 @@
     - name: Debug printing BKP_LOC value
       debug:
         msg: "Backup URL is: {{ BKP_LOC }}"
-        
+      when: BKP_LOC is defined and BKP_LOC|length > 0
+
     - name: Make download directory
       become: true
       file: 
