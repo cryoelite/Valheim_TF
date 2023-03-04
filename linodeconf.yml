@@ -109,6 +109,10 @@
         mode: '0755'
         state: directory
 
+    - name: Debug printing BKP_LOC value
+      debug:
+        msg: "Backup URL is: {{ BKP_LOC }}"
+        
     - name: Make download directory
       become: true
       file: 
@@ -118,11 +122,6 @@
         mode: '0755'
         state: directory
       when: BKP_LOC is defined and BKP_LOC|length > 0
-
-    - name: Debug printing BKP_LOC value
-      debug:
-        msg: "Backup URL is: {{ BKP_LOC }}"
-
 
     - name: Download backup dedicated world
       become: true

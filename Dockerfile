@@ -41,4 +41,3 @@ RUN chmod 777 ~/development/custom_inventory.ini
 
 
 ENTRYPOINT ["/root/development/valheim-ansible-conf.sh"]
-CMD ["exec", "/bin/sh"]
