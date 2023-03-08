@@ -172,7 +172,7 @@
         owner: root
         mode: '0644'
 
-    - name: Change start_Valheim file perms
+    - name: Change start_valheim file perms
       become: true
       file: 
         path: /home/ValheimGH/Valheim/start_Valheim.sh
