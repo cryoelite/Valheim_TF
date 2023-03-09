@@ -7,7 +7,7 @@
       linode.cloud.instance:
         api_token: "{{ api_token }}"
         label: valheim-ln
-        type: g6-dedicated-4
+        type: g6-standard-2
         region: ap-west
         image: linode/ubuntu22.10
         root_pass: "{{ password }}"
