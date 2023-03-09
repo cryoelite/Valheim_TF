@@ -2,6 +2,9 @@
 BACKUP_FILE=$1
 FOLDERID=$2
 TOKEN=$3
+echo "Starting backup of config to gofile"
+
+echo "Backup file location is $BACKUP_FILE"
 
 response=$(curl -s https://api.gofile.io/getServer)
 
