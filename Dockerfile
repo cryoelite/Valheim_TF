@@ -23,12 +23,12 @@ RUN mkdir -p ~/development/group_vars/
 RUN touch ~/development/group_vars/vars.yml
 
 RUN mkdir -p /etc/ansible/
-COPY ["../.vault-pass", "/root/development/"]
-COPY ["../ansible.cfg", "/etc/ansible/"]
-COPY ["../deploylinode.yml", "/root/development/"]
-COPY ["../valheim-ansible-conf.sh", "/root/development/"]
-COPY ["../linodeconf.yml", "/root/development/"]
-COPY ["../Valheim/.env", "/root/development/"]
+COPY [".vault-pass", "/root/development/"]
+COPY ["ansible.cfg", "/etc/ansible/"]
+COPY ["deploylinode.yml", "/root/development/"]
+COPY ["valheim-ansible-conf.sh", "/root/development/"]
+COPY ["linodeconf.yml", "/root/development/"]
+COPY ["Valheim/.env", "/root/development/"]
 RUN chmod 644 ~/development/.vault-pass
 RUN chmod 777 /etc/ansible//ansible.cfg
 RUN chmod 644 ~/development/deploylinode.yml
